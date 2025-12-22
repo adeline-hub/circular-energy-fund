@@ -1,0 +1,14 @@
+{
+  "location": "Sicilia, Italia",
+  "households": 100,
+  "average_household_consumption_kwh": 2700,
+  "installed_capacity_kwp": 200,
+  "specific_yield_kwh_per_kwp": 1500,
+  "self_consumption_rate": 0.75,
+  "electricity_price_eur_per_kwh": 0.28,
+  "shared_energy_value_eur_per_kwh": 0.12,
+  "capex_eur": 250000,
+  "opex_eur_per_year": 8000,
+  "discount_rate": 0.06,
+  "co2_factor_kg_per_kwh": 0.45
+}
