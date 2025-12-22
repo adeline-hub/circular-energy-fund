@@ -1,0 +1,10 @@
+﻿year,metric,value,unit
+2024,installed_capacity,200,kWp
+2024,annual_production,300000,kWh
+2024,annual_consumption,270000,kWh
+2024,self_consumption_rate,0.75,ratio
+2024,self_consumed_energy,225000,kWh
+2024,shared_energy,75000,kWh
+2024,households,100,units
+2024,energy_per_household,2700,kWh
+2024,co2_avoided,135,tons

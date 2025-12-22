@@ -6,8 +6,17 @@ from style.dubois_theme import DUBOIS_THEME, FONT_FAMILY
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-energy = pd.read_csv(os.path.join(BASE_DIR, "data/energy.csv"))
-finance = pd.read_csv(os.path.join(BASE_DIR, "data/finance.csv"))
+energy = pd.read_csv(
+    os.path.join(BASE_DIR, "data/energy.csv"),
+    encoding="latin-1"
+)
+
+finance = pd.read_csv(
+    os.path.join(BASE_DIR, "data/finance.csv"),
+    encoding="latin-1"
+)
+
+finance.columns = finance.columns.str.replace("ï»¿", "").str.strip()
 
 st.markdown(
     "<h1 style='text-align:center;'>100 famiglie, un impianto solare</h1>",
