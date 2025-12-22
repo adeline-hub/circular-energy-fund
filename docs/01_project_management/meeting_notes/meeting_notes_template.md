@@ -2,14 +2,19 @@
 
 **Data:**  
 **Partecipanti:**  
-**Obiettivo incontro:**
+**Tipo di incontro:**  
 
-## Discussione
-- 
+## Obiettivo
+Descrizione sintetica dell’obiettivo dell’incontro.
 
-## Decisioni
+## Punti Discussi
+1.
+2.
+3.
+
+## Decisioni Prese
 - 
 
 ## Azioni
 | Azione | Responsabile | Scadenza |
-|-------|-------------|----------|
+|------|-------------|----------|
