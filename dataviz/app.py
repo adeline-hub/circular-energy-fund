@@ -1,29 +1,33 @@
+# =========================
+# CONFIG & IMPORT
+# =========================
 import os
-from style.dubois_theme import DUBOIS_THEME, FONT_FAMILY
-import streamlit as st
-import pandas as pd
-import plotly.express as px
 from pathlib import Path
-import streamlit.components.v1 as components
 import tempfile
 
+import streamlit as st
+import streamlit.components.v1 as components
+
+import pandas as pd
+import numpy as np
+import plotly.express as px
+
+from style.danki_theme import DANKI_THEME, FONT_FAMILY
+
 # =========================
-# PAGE CONFIG
+# PAGE SETUP
 # =========================
 st.set_page_config(
     page_title="Circular Energy Fund – Dashboard Cliente",
     layout="wide"
 )
 
-from pathlib import Path
-
-ASSETS_DIR = Path(__file__).resolve().parent / "assets"
-
 # =========================
-# PATHS (SAFE FOR LOCAL + RENDER)
+# PATHS
 # =========================
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
+ASSETS_DIR = BASE_DIR / "assets"
 
 # =========================
 # LOAD DATA
@@ -34,28 +38,45 @@ members = pd.read_excel(DATA_DIR / "members.xlsx")
 cashflow = pd.read_excel(DATA_DIR / "cashflow.xlsx")
 market = pd.read_excel(DATA_DIR / "market_prices_it_eu.xlsx")
 
-
-
-
-# clean columns (safety)
 for df in [energy, consumption, members, cashflow, market]:
     df.columns = df.columns.str.strip()
+    
+# =========================
+# QUICK NAVIGATION
+# =========================
+st.markdown("""
+### NAVIGAZIONE RAPIDA 
+- [ Obiettivo del progetto](#obiettivo-del-progetto)
+- [ KPI principali](#kpi-principali)
+- [ Localizzazione](#localizzazione-del-progetto)
+- [ Confronto mercato energetico](#confronto-mercato-energetico)
+- [ Produzione e consumi](#produzione-e-consumi)
+- [ Soci](#distribuzione-ai-soci)
+- [ Analisi economica](#analisi-economica)
+- [ Scenari futuri](#scenari-di-lungo-periodo)
+- [ Smart Grid](#smart-grid-comunitaria)
+- [ Accumulo](#sistema-di-accumulo)
+""")
+st.divider()
+
+# =========================
+# PROJECT OBJECTIVE
+# =========================
+
+st.markdown("<a name='obiettivo-del-progetto'></a>", unsafe_allow_html=True)
 
 col_logo, col_text = st.columns([1, 4])
 
 with col_logo:
-    st.image(
-        str(ASSETS_DIR / "logo.png"),
-        use_column_width=True
-    )
+    st.image(ASSETS_DIR / "logo.png", use_column_width=True)
 
 with col_text:
     st.markdown("""
-### Obiettivo del Progetto
+### OBIETTOVO DEL PROGETTO
 
-Il **Circular Energy Fund** nasce con l’obiettivo di creare un **veicolo di investimento partecipativo**
-che consenta a una comunità di circa **100 soci** di investire collettivamente nella realizzazione
-di un **impianto fotovoltaico sostenibile in Sicilia**.
+Il **Circular Energy Fund** è un veicolo di investimento partecipativo
+che consente a una comunità di circa **100 soci** di investire collettivamente
+in un **impianto fotovoltaico sostenibile in Sicilia**.
 
 Il progetto è concepito per:
 - produrre energia rinnovabile senza sottrarre terreno all’agricoltura  
@@ -67,8 +88,6 @@ che possono usufruire di **energia elettrica a prezzo agevolato**
 e di **rendimenti indiretti nel lungo periodo**.
 """)
 
-st.divider()
-
 # =========================
 # META BLOCK – 6 COLUMNS
 # =========================
@@ -76,7 +95,7 @@ components.html(
 """
 <style>
 .meta-container {
-    background-color: #f4f6f8;
+    background-color: #33FFA2;
     padding: 24px 32px;
     border-radius: 8px;
     margin-bottom: 32px;
@@ -131,6 +150,8 @@ components.html(
     <div class="meta-item">
       <b>CATEGORIES</b>
       Renewable Energy<br>
+      Market Analysis<br>
+      Ingeneria finanziaria<br>
       Data Visualization
     </div>
 
@@ -138,12 +159,14 @@ components.html(
       <b>TOOLS</b>
       Python<br>
       Streamlit<br>
-      Plotly
+      Plotly<br>
+      Render.com
     </div>
 
     <div class="meta-item">
       <b>DATA</b>
       IPCC<br>
+      ISTAT<br>
       Eurostat
     </div>
 
@@ -155,26 +178,137 @@ height=180
 st.divider()
 
 # =========================
-# HEADER
+# MAIN DASHBOARD CONTENT
 # =========================
-st.title("🟢 Circular Energy Fund")
-st.subheader("Veicolo di investimento partecipativo e sostenibile")
 
-# =========================
-# KPI SECTION
-# =========================
+st.markdown("<a name='kpi-principali'></a>", unsafe_allow_html=True)
+
+st.header("KPI PRINCIPALI")
+
 col1, col2, col3, col4 = st.columns(4)
 
-total_capacity_kwp = 200
-annual_production_mwh = energy["production_kwh"].sum() / 1000
-co2_avoided = 135
-n_members = len(members)
+col1.metric("Capacità installata", "200 kWp")
+col2.metric("Produzione annua", f"{energy['production_kwh'].sum()/1000:.0f} MWh")
+col3.metric("Soci", len(members))
+col4.metric("CO₂ evitata", "135 t/anno")
 
-col1.metric("Capacità installata", f"{total_capacity_kwp} kWp")
-col2.metric("Produzione annua", f"{annual_production_mwh:.0f} MWh")
-col3.metric("Soci", n_members)
-col4.metric("CO₂ evitata", f"{co2_avoided} t/anno")
+# =========================
+# PROJECT LOCATION
+# =========================
 
+st.markdown("<a name='localizzazione-del-progetto'></a>", unsafe_allow_html=True)
+st.header("LOCALOZZAZIONE DEL PROGETTO")
+st.markdown("""
+L’impianto fotovoltaico è localizzato in **Sicilia**, in un’area idonea che
+non sottrae terreno all’agricoltura e favorisce l’integrazione con il territorio.
+""")
+# Coordinate progetto (Sicilia)
+project_location = pd.DataFrame({
+    "name": ["Impianto Fotovoltaico – Circular Energy Fund"],
+    "lat": [37.5],
+    "lon": [14.0]
+})
+
+fig_map = px.scatter_geo(
+    project_location,
+    lat="lat",
+    lon="lon",
+    text="name",
+    projection="natural earth",
+)
+
+fig_map.update_traces(
+    marker=dict(
+        size=14,
+        color="#FF33FF",
+        symbol="circle"
+    ),
+    textposition="top center"
+)
+
+fig_map.update_layout(
+    geo=dict(
+        scope="europe",
+        center=dict(lat=37.5, lon=14.0),
+        projection_scale=6,
+        showland=True,
+        landcolor="rgb(243, 243, 243)",
+        showcountries=True,
+        countrycolor="rgb(204, 204, 204)"
+    ),
+    margin=dict(l=0, r=0, t=0, b=0)
+)
+
+st.plotly_chart(fig_map, use_container_width=True)
+
+# =========================
+# ENERGY MARKET COMPARISON
+# =========================
+
+st.markdown("<a name='confronto-mercato-energetico'></a>", unsafe_allow_html=True)
+st.header("CONFRONTO CON IL MERCATO ENERGETICO")
+
+# =========================
+# MARKET COMPARISON
+
+st.subheader("🟢 Prezzo Energia – Confronto Mercato")
+
+fig_market = px.line(
+    market,
+    x="year",
+    y=["italy_price_eur_kwh", "eu_avg_price_eur_kwh", "cef_member_price"],
+    title="Prezzo energia (€ / kWh)",
+    labels={"value": "€/kWh", "variable": "Mercato"}
+)
+
+st.plotly_chart(fig_market, use_container_width=True)
+
+# =========================
+# ENERGY PRODUCTION & CONSUMPTION
+# =========================
+
+st.markdown("<a name='produzione-e-consumi'></a>", unsafe_allow_html=True)
+st.header("PRODUZIONE E CONSUMI ENERGETICI")
+
+# =========================
+# ENERGY PRODUCTION (LINE CHART)
+
+st.subheader("🟢 Produzione Fotovoltaica")
+
+fig_prod = px.line(
+    energy,
+    x="date",
+    y="production_kwh",
+    title="Produzione fotovoltaica giornaliera (Sicilia)",
+    labels={
+        "date": "Data",
+        "production_kwh": "Produzione (kWh)"
+    }
+)
+
+st.plotly_chart(fig_prod, use_container_width=True)
+
+# =========================
+# CONSUMPTION VS SELF-CONSUMPTION
+
+st.subheader("🟢 Autoconsumo Comunità")
+
+fig_cons = px.line(
+    consumption,
+    x="date",
+    y=["total_consumption_kwh", "self_consumed_kwh"],
+    title="Consumo totale vs Autoconsumo",
+    labels={"value": "kWh", "variable": "Tipo"}
+)
+
+st.plotly_chart(fig_cons, use_container_width=True)
+
+# =========================
+# DISTRIBUTION TO MEMBERS
+# =========================
+
+st.markdown("<a name='distribuzione-ai-soci'></a>", unsafe_allow_html=True)
+st.header("DISTRIBUZIONE AI SOCI")
 
 st.subheader("🟢 Perché è un fondo circolare")
 
@@ -222,61 +356,26 @@ with col_c:
     progetto sostenibile, locale
     e trasparente.
     """)
-
+    
 # =========================
-# MAPPA – LOCALIZZAZIONE PROGETTO
-# =========================
-st.header("🟢 Localizzazione del Progetto")
+# CASHFLOW (LINE)
 
-st.markdown("""
-L’impianto fotovoltaico è localizzato in **Sicilia**, in un’area idonea che
-non sottrae terreno all’agricoltura e favorisce l’integrazione con il territorio.
-""")
+st.header("ANALISI ECONOMICA")
 
-# Coordinate progetto (Sicilia)
-project_location = pd.DataFrame({
-    "name": ["Impianto Fotovoltaico – Circular Energy Fund"],
-    "lat": [37.5],
-    "lon": [14.0]
-})
-
-fig_map = px.scatter_geo(
-    project_location,
-    lat="lat",
-    lon="lon",
-    text="name",
-    projection="natural earth",
+fig_cash = px.line(
+    cashflow,
+    x="year",
+    y=["net_cashflow", "cumulative_cashflow"],
+    title="Cashflow del progetto",
+    labels={"value": "€", "variable": "Tipo"}
 )
 
-fig_map.update_traces(
-    marker=dict(
-        size=14,
-        color="orange",
-        symbol="circle"
-    ),
-    textposition="top center"
-)
-
-fig_map.update_layout(
-    geo=dict(
-        scope="europe",
-        center=dict(lat=37.5, lon=14.0),
-        projection_scale=6,
-        showland=True,
-        landcolor="rgb(243, 243, 243)",
-        showcountries=True,
-        countrycolor="rgb(204, 204, 204)"
-    ),
-    margin=dict(l=0, r=0, t=0, b=0)
-)
-
-st.plotly_chart(fig_map, use_container_width=True)
-
+st.plotly_chart(fig_cash, use_container_width=True)
 
 # =========================
 # TIMELINE PROGETTO (20 ANNI)
-# =========================
-st.header("🟢 Timeline del Progetto (20 anni)")
+
+st.subheader("🟢 Timeline del Progetto (20 anni)")
 
 st.markdown("""
 La timeline seguente illustra l’evoluzione del progetto nel tempo,
@@ -335,88 +434,23 @@ with col_b:
 - Massimizzazione dell’impatto ambientale e sociale
     """)
 # =========================
-
-
 col1, col2, col3 = st.columns(3)
 
 col1.metric("Durata progetto", "20 anni")
 col2.metric("Break-even", "≈ 7–8 anni")
 col3.metric("Benefici netti a regime", "≥ 30.000 €/anno")
 
-
 # =========================
-# ENERGY PRODUCTION (LINE CHART)
-# =========================
-st.header("🟢 Produzione Fotovoltaica")
+# LONG-TERM SCENARIOS
+# =========================    
 
-fig_prod = px.line(
-    energy,
-    x="date",
-    y="production_kwh",
-    title="Produzione fotovoltaica giornaliera (Sicilia)",
-    labels={
-        "date": "Data",
-        "production_kwh": "Produzione (kWh)"
-    }
-)
-
-st.plotly_chart(fig_prod, use_container_width=True)
-
-# =========================
-# CONSUMPTION VS SELF-CONSUMPTION
-# =========================
-st.header("🟢 Autoconsumo Comunità")
-
-fig_cons = px.line(
-    consumption,
-    x="date",
-    y=["total_consumption_kwh", "self_consumed_kwh"],
-    title="Consumo totale vs Autoconsumo",
-    labels={"value": "kWh", "variable": "Tipo"}
-)
-
-st.plotly_chart(fig_cons, use_container_width=True)
-
-# =========================
-# MEMBERS DISTRIBUTION (BAR)
-# =========================
-st.header("🟢 Distribuzione Energia ai Soci")
-
-fig_members = px.bar(
-    members,
-    x="member_id",
-    y="energy_share_kwh",
-    title="Energia condivisa per socio",
-    labels={
-        "member_id": "Socio",
-        "energy_share_kwh": "Energia (kWh)"
-    }
-)
-
-st.plotly_chart(fig_members, use_container_width=True)
-
-# =========================
-# CASHFLOW (LINE)
-# =========================
-st.header("🟢 Analisi Economica")
-
-fig_cash = px.line(
-    cashflow,
-    x="year",
-    y=["net_cashflow", "cumulative_cashflow"],
-    title="Cashflow del progetto",
-    labels={"value": "€", "variable": "Tipo"}
-)
-
-st.plotly_chart(fig_cash, use_container_width=True)
-# =========================
-
+st.markdown("<a name='scenari-di-lungo-periodo'></a>", unsafe_allow_html=True)
+st.header("SCENARI DI LUNGO PERIODO")
 
 # =========================
 # SCENARI CLIMATICI (20 ANNI)
-# =========================
 
-st.header("🟢 Scenari di lungo periodo e cambiamento climatico")
+st.subheader("🟢 Scenari di lungo periodo e cambiamento climatico")
 
 st.markdown("""
 L’analisi seguente considera tre **scenari evolutivi** su un orizzonte di **20 anni**.
@@ -467,26 +501,18 @@ st.markdown("""
 In tutti gli scenari, la **localizzazione in Sicilia** e l’orientamento all’autoconsumo
 contribuiscono a mitigare i rischi climatici ed economici.
 """)
-# =========================
-# MARKET COMPARISON
-# =========================
-st.header("🟢 Prezzo Energia – Confronto Mercato")
-
-fig_market = px.line(
-    market,
-    x="year",
-    y=["italy_price_eur_kwh", "eu_avg_price_eur_kwh", "cef_member_price"],
-    title="Prezzo energia (€ / kWh)",
-    labels={"value": "€/kWh", "variable": "Mercato"}
-)
-
-st.plotly_chart(fig_market, use_container_width=True)
 
 # =========================
 # SMART GRID COMMUNITY
 # =========================
 
-st.header("⚡ Smart Grid Comunitaria")
+st.markdown("<a name='smart-grid-comunitaria'></a>", unsafe_allow_html=True)
+st.header("SMART GRID COMUNITARIA")
+
+# =========================
+# SMART GRID COMMUNITY
+
+st.subheader("🟢 Smart Grid Comunitaria")
 
 st.markdown("""
 La Smart Grid del **Circular Energy Fund** coordina in tempo reale
@@ -500,8 +526,8 @@ la produzione fotovoltaica e i consumi dei soci, con l’obiettivo di:
 
 # =========================
 # SMART GRID – ENERGY FLOWS
-# =========================
-st.subheader("🔌 Flussi energetici della Smart Grid")
+
+st.subheader("🟢 Flussi energetici della Smart Grid")
 
 smartgrid_df = pd.DataFrame({
     "Fonte": ["Produzione FV", "Produzione FV", "Produzione FV"],
@@ -523,6 +549,9 @@ fig_sg = px.bar(
 
 st.plotly_chart(fig_sg, use_container_width=True)
 
+# =========================
+# SMART GRID – KEY INDICATORS
+
 st.subheader("🟢 Indicatori Smart Grid")
 
 col1, col2, col3, col4 = st.columns(4)
@@ -542,9 +571,8 @@ e riducendo gli sprechi in condizioni estreme.
 
 # =========================
 # SMART GRID – HEATMAP
-# =========================
 
-st.header("🟢 Smart Grid – Produzione vs Consumo (Heatmap Oraria)")
+st.subheader("🟢 Smart Grid – Produzione vs Consumo (Heatmap Oraria)")
 
 st.markdown("""
 La seguente heatmap rappresenta una **ricostruzione oraria realistica**
@@ -642,10 +670,16 @@ st.info("""
 """)
 
 # =========================
-# SMART GRID – BATTERY STORAGE
+# ENERGY STORAGE SYSTEM
 # =========================
 
-st.header("🟢 Smart Grid – Simulazione Sistema di Accumulo (Batterie)")
+st.markdown("<a name='sistema-di-accumulo'></a>", unsafe_allow_html=True)
+st.header("SISTEMA DI ACCUMULO")
+
+# =========================
+# SMART GRID – BATTERY STORAGE
+
+st.subheader("🟢 Smart Grid – Simulazione Sistema di Accumulo (Batterie)")
 
 st.markdown("""
 La simulazione seguente mostra l’effetto di un **sistema di accumulo**
@@ -773,14 +807,12 @@ st.info("""
 # =========================
 # FOOTER
 # =========================
+
 st.divider()
 
-st.markdown(
-    """
-    <div style="text-align: center; color: grey; font-size: 0.9em;">
-        🟢 Contatto: <a href="mailto:danki.datastudio@gmail.com">danki.datastudio@gmail.com</a><br>
-        Dati simulati a scopo illustrativo – Circular Energy Fund
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("""
+⬆️ [Torna all’inizio](#navigazione-rapida)
+
+🟢 Contatto: danki.datastudio@gmail.com  
+Dati simulati a scopo illustrativo – Circular Energy Fund
+""", unsafe_allow_html=True)
