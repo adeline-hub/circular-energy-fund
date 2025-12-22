@@ -1,14 +1,52 @@
-# Compliance Crowdfunding
+\# Crowdfunding – Regulatory Overview
 
-## Normativa Applicabile
-- Regolamento Europeo ECSP
-- Normativa italiana su crowdfunding
 
-## Requisiti Chiave
-- Trasparenza informativa
-- KYC / AML
-- Limiti di investimento
 
-## Impatti sul Progetto
-- Struttura del veicolo
-- Comunicazione agli investitori
+\## Quadro Normativo
+
+
+
+Il modello di crowdfunding è analizzato alla luce di:
+
+
+
+\- Regolamento Europeo ECSP
+
+\- Normativa italiana sul crowdfunding
+
+\- Requisiti KYC / AML
+
+\- Obblighi di trasparenza verso gli investitori
+
+
+
+---
+
+
+
+\## Impatti sul Progetto
+
+
+
+\- Struttura del veicolo di investimento
+
+\- Comunicazione verso i soci
+
+\- Gestione dei flussi finanziari
+
+
+
+---
+
+
+
+\## Rischi e Mitigazioni
+
+
+
+\- Rischio normativo → consulenza legale specializzata
+
+\- Rischio informativo → documentazione chiara e accessibile
+
+
+
