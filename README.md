@@ -31,7 +31,9 @@ Il progetto segue un approccio strutturato, dall'ideazione fino alla prototipazi
 - Definizione dei requisiti legali e fiscali.
 
 ### Fase 3: Prototipazione Dati e Tecnologia (Stato Attuale - In Corso) 
+
 https://circular-energy-fund.onrender.com/ 
+
 Attualmente ci troviamo nella fase di sviluppo e test degli strumenti di comunicazione e tracciabilità per i soci azionisti. I due deliverable principali di questa fase, presenti in questo repository, sono:
 1. White Paper Interattivo: Sviluppato in Python (tramite Marimo), spiega in modo trasparente l'architettura blockchain per la tracciabilità dell'energia e la distribuzione dei dividendi.
 2. Dashboard Prototipo: Un'interfaccia utente dedicata ai soci per monitorare la produzione energetica, i rendimenti economici e l'impatto ambientale della propria quota di investimento.
